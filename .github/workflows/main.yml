@@ -7,6 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Install dependencies
+        run: npm ci
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
@@ -46,6 +52,8 @@ jobs:
         run: npm ci || npm install
       - name: Configure npm with token
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+      - name: Verify npm authentication
+        run: npm whoami
       - name: Publish
         run: npm publish --access public
         env:
